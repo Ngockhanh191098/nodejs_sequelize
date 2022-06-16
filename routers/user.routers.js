@@ -53,7 +53,6 @@ router.post('/',jsonParser, async (req, res) => {
                 ]
             }
         });
-        console.log(findUser);
         // check user exist
         if(!findUser) {
             await UserModel.create(data); 
@@ -90,26 +89,24 @@ router.put('/:id', jsonParser, async (req, res) => {
                             id,
                         } 
                 });
-                res.send({message:'Update user succsessfully!'});
+                res.status(200).json({message:'Update user succsessfully!'});
             }else {
                 res.status(404).json({message: "User not found!"})
             }
         } catch (error) {
             res.status(500).json({message: "Server is fail..."})
         }
-
-    
 });
 
 // delete user
 router.delete('/:id', async (req, res) => {
     const {id} = req.params;
+    const userFind = await UserModel.findOne({
+        where: {
+            id,
+        }
+    });
     try {
-        const userFind = await UserModel.findOne({
-            where: {
-                id,
-            }
-        });
         if(userFind){
             await UserModel.destroy({
                 where : {
